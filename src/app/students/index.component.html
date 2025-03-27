@@ -29,7 +29,6 @@
       </svg>
     </label>
   </div>
-
   <div class="divider"></div>
   <!-- Table -->
   <div class="row">
@@ -103,6 +102,11 @@
             </tr>
           </tbody>
         </table>
+        <div class="divider"></div>
+        <button class="btn btn-glass" (click)="goToDB()">
+          <img src="https://mailmeteor.com/logos/assets/PNG/Google_Sheets_Logo_512px.png"
+          alt="Google Sheets Logo" class="inline w-5 h-7" /> View Database
+        </button>
       </div>
     </div>
   </div>
@@ -120,19 +124,101 @@
       </div>
 
       <form [formGroup]="studentForm" (ngSubmit)="submit()">
-        <input type="text" formControlName="name" placeholder="Name" class="input input-bordered w-full mb-2" required />
-        <input type="email" formControlName="email" placeholder="Email" class="input input-bordered w-full mb-2" required />
-        <input type="text" formControlName="course" placeholder="Course" class="input input-bordered w-full mb-4" required />
-        <button type="submit" class="btn btn-dark w-full flex justify-center items-center" [disabled]="isSubmitting">
-          <ng-container *ngIf="!isSubmitting; else loading">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5 mr-2">
-              <path d="M10 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM1.615 16.428a1.224 1.224 0 0 1-.569-1.175 6.002 6.002 0 0 1 11.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 0 1 7 18a9.953 9.953 0 0 1-5.385-1.572ZM16.25 5.75a.75.75 0 0 0-1.5 0v2h-2a.75.75 0 0 0 0 1.5h2v2a.75.75 0 0 0 1.5 0v-2h2a.75.75 0 0 0 0-1.5h-2v-2Z" />
-            </svg> Add Student
-          </ng-container>
-          <ng-template #loading>
-            <span class="loading loading-spinner size-5"></span> Processing...
-          </ng-template>
-        </button>
+        <!-- Name Field with Validation Tooltip -->
+        <div
+        class="tooltip w-full"
+        [ngClass]="{
+          'tooltip-open tooltip-right tooltip-error': studentForm.controls['name'].invalid && (studentForm.controls['name'].dirty || studentForm.controls['name'].touched),
+          'tooltip-success': studentForm.controls['name'].valid
+        }"
+        [attr.data-tip]="studentForm.controls['name'].valid ? 'Valid Name' : 'Name is required'"
+        >
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="Name"
+          class="input input-bordered w-full mb-2"
+          [ngClass]="{
+            'border-red-500': studentForm.controls['name'].invalid && (studentForm.controls['name'].dirty || studentForm.controls['name'].touched),
+            'border-green-500': studentForm.controls['name'].valid
+          }"
+          required
+        />
+        </div>
+
+        <!-- Email Field with Validation Tooltip -->
+        <div
+        class="tooltip w-full"
+        [ngClass]="{
+          'tooltip-open tooltip-right tooltip-error': studentForm.controls['email'].invalid && (studentForm.controls['email'].dirty || studentForm.controls['email'].touched),
+          'tooltip-success': studentForm.controls['email'].valid
+        }"
+        [attr.data-tip]="studentForm.controls['email'].valid ? 'Valid Email' : studentForm.controls['email'].hasError('required') ? 'Email is required' : 'Invalid email format'"
+        >
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="Email"
+          class="input input-bordered w-full mb-2"
+          [ngClass]="{
+            'border-red-500': studentForm.controls['email'].invalid && (studentForm.controls['email'].dirty || studentForm.controls['email'].touched),
+            'border-green-500': studentForm.controls['email'].valid
+          }"
+          required
+        />
+        </div>
+
+        <!-- Course Field with Validation Tooltip -->
+        <div
+        class="tooltip w-full"
+        [ngClass]="{
+          'tooltip-open tooltip-right tooltip-error': studentForm.controls['course'].invalid && (studentForm.controls['course'].dirty || studentForm.controls['course'].touched),
+          'tooltip-success': studentForm.controls['course'].valid
+        }"
+        [attr.data-tip]="studentForm.controls['course'].valid ? 'Valid Course' : 'Course is required'"
+        >
+        <input
+          type="text"
+          formControlName="course"
+          placeholder="Course"
+          class="input input-bordered w-full mb-4"
+          [ngClass]="{
+            'border-red-500': studentForm.controls['course'].invalid && (studentForm.controls['course'].dirty || studentForm.controls['course'].touched),
+            'border-green-500': studentForm.controls['course'].valid
+          }"
+          required
+        />
+        </div>
+
+        <div class="flex items-center justify-between">
+          <!-- Add Student Button -->
+          <button type="submit" class="btn btn-success flex justify-center items-center" [disabled]="isSubmitting">
+            <ng-container *ngIf="!isSubmitting; else loading">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5 mr-2">
+                <path d="M10 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM1.615 16.428a1.224 1.224 0 0 1-.569-1.175 6.002 6.002 0 0 1 11.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 0 1 7 18a9.953 9.953 0 0 1-5.385-1.572ZM16.25 5.75a.75.75 0 0 0-1.5 0v2h-2a.75.75 0 0 0 0 1.5h2v2a.75.75 0 0 0 1.5 0v-2h2a.75.75 0 0 0 0-1.5h-2v-2Z" />
+              </svg>Add Student
+            </ng-container>
+            <ng-template #loading>
+              <span class="loading loading-spinner size-5"></span> Processing...
+            </ng-template>
+          </button>
+
+          <div class="tooltip tooltip-right" data-tip="Missing fields?">
+            <!-- Help Button -->
+            <div class="dropdown">
+              <button tabindex="0" class="btn btn-outline">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                </svg>
+              </button>
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm normal-case">
+                <li><span class="font-normal">id is auto-incremented</span></li>
+                <li><span class="font-normal">id number is auto-generated</span></li>
+                <li><span class="font-normal">status is set to active by default.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
   </div>

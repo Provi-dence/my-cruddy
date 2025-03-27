@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Student } from '../_model/student';
 import Swal from 'sweetalert2';
 import { FakeBackendService } from '../_services/fake-backend.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student',
@@ -29,6 +30,7 @@ export class StudentsComponent implements OnInit {
     'https://script.google.com/macros/s/AKfycbwFNubRYGUVCyd8Fq1Y4OZmpu7a7Y2W5aZh0UmUmdWow5Wl3JHa5blJgKa7q1OZjjJp/exec'; // Replace with your actual script URL
 
   isModalOpen = false;
+  constructor(private router: Router) {}
 
   openModal(student?: Student) {
     this.isModalOpen = true;
@@ -248,5 +250,9 @@ updateStudent() {
         value.toString().toLowerCase().includes(query)
       )
     );
+  }
+
+  goToDB(){
+    window.open('https://docs.google.com/spreadsheets/d/1aK6Ho7nyzJhndGzl5zCKmr7rLaSmZIkec8EMxi1MGJw/edit?usp=sharing', '_blank');
   }
 }
