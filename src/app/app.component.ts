@@ -9,13 +9,5 @@ import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
   imports: [CommonModule, RouterOutlet], // Ensure RouterOutlet is imported here
 })
 export class AppComponent {
-  isStudentRoute = false;
 
-  constructor(private router: Router) {
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.isStudentRoute = this.router.url.startsWith('/students');
-      }
-    });
-  }
 }
