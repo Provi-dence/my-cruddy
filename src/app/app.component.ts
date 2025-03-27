@@ -1,12 +1,21 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  imports: [CommonModule, RouterOutlet], // Ensure RouterOutlet is imported here
 })
 export class AppComponent {
-  title = 'my-cruddies';
+  isStudentRoute = false;
+
+  constructor(private router: Router) {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.isStudentRoute = this.router.url.startsWith('/students');
+      }
+    });
+  }
 }

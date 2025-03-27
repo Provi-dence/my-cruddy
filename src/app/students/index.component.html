@@ -1,0 +1,178 @@
+<div class="mb-4">
+  <h1 class="text-4xl font-bold">Student List</h1>
+  <br />
+  <p class="text-base font-light">
+    The student list below displays detailed information about each student, including their name, email address, status, course, and ID number. Use the "Add student" button to include new entries in the list.
+  </p>
+</div>
+
+<div class="flex items-center gap-4">
+  <button (click)="openModal()" class="btn btn-dark flex items-center gap-2">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    </svg>
+    Add student
+  </button>
+
+  <label class="input input-bordered flex items-center gap-2 w-full">
+    <input type="text" class="grow" placeholder="Search" [formControl]="searchQuery"/>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      class="h-4 w-4 opacity-70">
+      <path
+        fill-rule="evenodd"
+        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+        clip-rule="evenodd" />
+    </svg>
+  </label>
+</div>
+
+<div class="divider"></div>
+<!-- Table -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="overflow-x-auto">
+      <table class="table">
+        <!-- head -->
+        <thead>
+          <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Email Adress</th>
+            <th>Status</th>
+            <th>Course</th>
+            <th>ID Number</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Show spinner while loading -->
+          <tr *ngIf="isLoading">
+            <td colspan="7" class="text-center p-6">
+              <div class="flex justify-center">
+                <span class="loading loading-spinner loading-lg"></span>
+              </div>
+              <p class="text-gray-800 mt-2">Loading student records...</p>
+            </td>
+          </tr>
+          <!-- row -->
+          <tr *ngFor="let student of filteredStudents">
+            <td>{{ student.id }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.email }}</td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'badge-success': student.status === 'Active',
+                  'badge-error': student.status === 'Inactive'
+                }"
+              >
+                {{ student.status }}
+              </span>
+            </td>
+            <td>{{ student.course }}</td>
+            <td>{{ student.idNumber }}</td>
+            <td>
+              <button (click)="openUpdateModal(student)" class="btn btn-sm btn-dark">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                </svg>
+              </button>
+              <button (click)="deleteStudent(student.id)" class="btn btn-sm btn-dark">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          <!-- Show this row if students array is empty -->
+          <tr *ngIf="isThereStudents">
+            <td colspan="7" class="text-center bg-gray-300 text-gray-500 p-4">
+              No students found. Click "Add Student" to register a new student.
+            </td>
+          </tr>
+
+          <tr *ngIf="students.length > 0 && filteredStudents.length === 0">
+            <td colspan="7" class="text-center bg-gray-300 text-gray-500 p-4">
+              No matching students found.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!--
+Modals
+-->
+
+<!-- Add Student Modal -->
+<div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold">Add Student</h2>
+      <button (click)="closeModal()" class="text-gray-600 hover:text-gray-900">✖</button>
+    </div>
+
+    <form [formGroup]="studentForm" (ngSubmit)="submit()">
+      <input type="text" formControlName="name" placeholder="Name" class="input input-bordered w-full mb-2" required />
+      <input type="email" formControlName="email" placeholder="Email" class="input input-bordered w-full mb-2" required />
+      <input type="text" formControlName="course" placeholder="Course" class="input input-bordered w-full mb-4" required />
+      <button type="submit" class="btn btn-dark w-full flex justify-center items-center" [disabled]="isSubmitting">
+        <ng-container *ngIf="!isSubmitting; else loading">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5 mr-2">
+            <path d="M10 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM1.615 16.428a1.224 1.224 0 0 1-.569-1.175 6.002 6.002 0 0 1 11.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 0 1 7 18a9.953 9.953 0 0 1-5.385-1.572ZM16.25 5.75a.75.75 0 0 0-1.5 0v2h-2a.75.75 0 0 0 0 1.5h2v2a.75.75 0 0 0 1.5 0v-2h2a.75.75 0 0 0 0-1.5h-2v-2Z" />
+          </svg> Add Student
+        </ng-container>
+        <ng-template #loading>
+          <span class="loading loading-spinner size-5"></span> Processing...
+        </ng-template>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!--
+Update Modal
+--><dialog #updateModal class="modal">
+  <div class="modal-box">
+    <h3 class="font-bold text-lg">Update Student</h3>
+    <form [formGroup]="updateForm" (ngSubmit)="updateStudent()">
+      <label class="label">Name</label>
+      <input type="text" class="input input-bordered w-full" formControlName="name" />
+
+      <label class="label">Email</label>
+      <input type="email" class="input input-bordered w-full" formControlName="email" />
+
+      <label class="label">Course</label>
+      <input type="text" class="input input-bordered w-full" formControlName="course" />
+
+      <label class="label">Status</label>
+      <select class="select select-bordered w-full" formControlName="status">
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
+
+      <div class="modal-action">
+        <button type="submit" class="btn btn-dark">
+          <ng-container *ngIf="!isSubmitting; else loading" >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+              <path d="M10.75 2.75a.75.75 0 0 0-1.5 0v8.614L6.295 8.235a.75.75 0 1 0-1.09 1.03l4.25 4.5a.75.75 0 0 0 1.09 0l4.25-4.5a.75.75 0 0 0-1.09-1.03l-2.955 3.129V2.75Z" />
+              <path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" />
+            </svg>
+             Save Changes
+          </ng-container>
+          <ng-template #loading>
+            <span class="loading loading-spinner size-5"></span> Processing...
+          </ng-template>
+        </button>
+        <button type="button" class="btn" (click)="closeUpdateModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
