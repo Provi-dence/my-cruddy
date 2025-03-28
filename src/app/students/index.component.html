@@ -29,7 +29,9 @@
       </svg>
     </label>
   </div>
+
   <div class="divider"></div>
+
   <!-- Table -->
   <div class="row">
     <div class="col-md-12">
@@ -223,9 +225,8 @@
     </div>
   </div>
 
-  <!--
-  Update Modal
-  --><dialog #updateModal class="modal">
+  <!-- Update Modal -->
+  <dialog #updateModal class="modal">
     <div class="modal-box">
       <h3 class="font-bold text-lg">Update Student</h3>
       <form [formGroup]="updateForm" (ngSubmit)="updateStudent()">

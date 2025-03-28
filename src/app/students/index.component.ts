@@ -27,7 +27,7 @@ export class StudentsComponent implements OnInit {
   isLoading: boolean = true; // Spinner state sa table
   isThereStudents: boolean = false;
   googleScriptURL =
-    'https://script.google.com/macros/s/AKfycbwFNubRYGUVCyd8Fq1Y4OZmpu7a7Y2W5aZh0UmUmdWow5Wl3JHa5blJgKa7q1OZjjJp/exec'; // Replace with your actual script URL
+    'https://script.google.com/macros/s/AKfycbxEHOppH7BO-shEvBlsyr5r7MCIoiNxRc3l55tmjcQea0ThhHkd9Xv9QfI0JwC5NE6e/exec'; // Replace with your actual script URL
 
   isModalOpen = false;
   constructor(private router: Router) {}
