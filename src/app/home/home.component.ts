@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   standalone: true,
+
   templateUrl: './home.component.html',
 })
 export class HomeComponent {

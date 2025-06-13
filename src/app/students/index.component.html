@@ -1,15 +1,14 @@
-<div class="container mx-auto bg-base-200 p-6 rounded-lg shadow-lg">
+<div class="container mx-auto bg-base-200 p-4 sm:p-6 md:p-8 rounded-lg shadow-lg max-w-full">
   <div class="mb-4">
-    <h1 class="text-4xl font-bold">Student List</h1>
-    <br />
-    <p class="text-base font-light">
-      The student list below displays detailed information about each student, including their name, email address, status, course, and ID number. Use the "Add student" button to include new entries in the list.
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold">Student List</h1>
+    <p class="text-sm sm:text-base font-light mt-2">
+      The student list below displays detailed information about each student, including their name, email address, status, course, and ID number. Use the "Add student" button to include new entries.
     </p>
   </div>
 
-  <div class="flex items-center gap-4">
-    <button (click)="openModal()" class="btn btn-dark flex items-center gap-2">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-4">
+    <button (click)="openModal()" class="btn btn-dark flex items-center gap-2 w-full sm:w-auto">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 sm:size-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
       </svg>
       Add student
@@ -17,203 +16,229 @@
 
     <label class="input input-bordered flex items-center gap-2 w-full">
       <input type="text" class="grow" placeholder="Search" [formControl]="searchQuery"/>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 16 16"
-        fill="currentColor"
-        class="h-4 w-4 opacity-70">
-        <path
-          fill-rule="evenodd"
-          d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-          clip-rule="evenodd" />
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4 opacity-70">
+        <path fill-rule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clip-rule="evenodd" />
       </svg>
     </label>
   </div>
 
   <div class="divider"></div>
 
-  <!-- Table -->
+  <!-- Table for larger screens, card layout for mobile -->
   <div class="row">
     <div class="col-md-12">
       <div class="overflow-x-auto">
-        <table class="table">
-          <!-- head -->
+        <!-- Desktop Table -->
+        <table class="table hidden sm:table w-full">
           <thead>
             <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Email Adress</th>
-              <th>Status</th>
-              <th>Course</th>
-              <th>ID Number</th>
-              <th>Actions</th>
+              <th class="text-sm">ID</th>
+              <th class="text-sm">Name</th>
+              <th class="text-sm">Email Address</th>
+              <th class="text-sm">Status</th>
+              <th class="text-sm">Course</th>
+              <th class="text-sm">ID Number</th>
+              <th class="text-sm">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Show spinner while loading -->
             <tr *ngIf="isLoading">
               <td colspan="7" class="text-center p-6">
                 <div class="flex justify-center">
                   <span class="loading loading-spinner loading-lg"></span>
                 </div>
-                <p class="text-gray-800 mt-2">Loading student records...</p>
+                <p class="text-gray-800 mt-2 text-sm">Loading student records...</p>
               </td>
             </tr>
-            <!-- row -->
             <tr *ngFor="let student of filteredStudents">
-              <td>{{ student.id }}</td>
-              <td>{{ student.name }}</td>
-              <td>{{ student.email }}</td>
+              <td class="text-sm">{{ student.id }}</td>
+              <td class="text-sm">{{ student.name }}</td>
+              <td class="text-sm">{{ student.email }}</td>
               <td>
-                <span
-                  class="badge"
-                  [ngClass]="{
-                    'badge-success': student.status === 'Active',
-                    'badge-error': student.status === 'Inactive'
-                  }"
-                >
+                <span class="badge text-xs" [ngClass]="{
+                  'badge-success': student.status === 'Active',
+                  'badge-error': student.status === 'Inactive'
+                }">
                   {{ student.status }}
                 </span>
               </td>
-              <td>{{ student.course }}</td>
-              <td>{{ student.idNumber }}</td>
+              <td class="text-sm">{{ student.course }}</td>
+              <td class="text-sm">{{ student.idNumber }}</td>
               <td>
-                <button (click)="openUpdateModal(student)" class="btn btn-sm btn-dark">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                  </svg>
-                </button>
-                <button (click)="deleteStudent(student.id)" class="btn btn-sm btn-dark">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                  </svg>
-                </button>
+                <div class="flex gap-2">
+                  <button (click)="openUpdateModal(student)" class="btn btn-sm btn-dark">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 sm:size-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+                  </button>
+                  <button (click)="deleteStudent(student.id)" class="btn btn-sm btn-dark">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 sm:size-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                    </svg>
+                  </button>
+                </div>
               </td>
             </tr>
-            <!-- Show this row if students array is empty -->
             <tr *ngIf="isThereStudents">
-              <td colspan="7" class="text-center bg-gray-300 text-gray-500 p-4">
+              <td colspan="7" class="text-center bg-gray-300 text-gray-500 p-4 text-sm">
                 No students found. Click "Add Student" to register a new student.
               </td>
             </tr>
-
             <tr *ngIf="students.length > 0 && filteredStudents.length === 0">
-              <td colspan="7" class="text-center bg-gray-300 text-gray-500 p-4">
+              <td colspan="7" class="text-center bg-gray-300 text-gray-500 p-4 text-sm">
                 No matching students found.
               </td>
             </tr>
           </tbody>
         </table>
+
+        <!-- Mobile Card Layout -->
+        <div class="sm:hidden space-y-4">
+          <div *ngIf="isLoading" class="text-center p-6">
+            <div class="flex justify-center">
+              <span class="loading loading-spinner loading-lg"></span>
+            </div>
+            <p class="text-gray-800 mt-2 text-sm">Loading student records...</p>
+          </div>
+          <div *ngFor="let student of filteredStudents" class="card bg-base-100 shadow-md p-4">
+            <div class="text-sm">
+              <p><strong>ID:</strong> {{ student.id }}</p>
+              <p><strong>Name:</strong> {{ student.name }}</p>
+              <p><strong>Email:</strong> {{ student.email }}</p>
+              <p><strong>Status:</strong>
+                <span class="badge text-xs" [ngClass]="{
+                  'badge-success': student.status === 'Active',
+                  'badge-error': student.status === 'Inactive'
+                }">
+                  {{ student.status }}
+                </span>
+              </p>
+              <p><strong>Course:</strong> {{ student.course }}</p>
+              <p><strong>ID Number:</strong> {{ student.idNumber }}</p>
+              <div class="flex gap-2 mt-2">
+                <button (click)="openUpdateModal(student)" class="btn btn-sm btn-dark">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                  </svg>
+                </button>
+                <button (click)="deleteStudent(student.id)" class="btn btn-sm btn-dark">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="isThereStudents" class="text-center bg-gray-300 text-gray-500 p-4 text-sm">
+            No students found. Click "Add Student" to register a new student.
+          </div>
+          <div *ngIf="students.length > 0 && filteredStudents.length === 0" class="text-center bg-gray-300 text-gray-500 p-4 text-sm">
+            No matching students found.
+          </div>
+        </div>
         <div class="divider"></div>
-        <button class="btn btn-glass" (click)="goToDB()">
-          <img src="https://mailmeteor.com/logos/assets/PNG/Google_Sheets_Logo_512px.png"
-          alt="Google Sheets Logo" class="inline w-5 h-7" /> View Database
+        <button class="btn btn-glass w-full sm:w-auto" (click)="goToDB()">
+          <img src="https://mailmeteor.com/logos/assets/PNG/Google_Sheets_Logo_512px.png" alt="Google Sheets Logo" class="inline w-5 h-7" /> View Database
         </button>
       </div>
     </div>
   </div>
 
-  <!--
-  Modals
-  -->
-
   <!-- Add Student Modal -->
-  <div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+  <div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-bold">Add Student</h2>
-        <button (click)="closeModal()" class="text-gray-600 hover:text-gray-900">✖</button>
+        <h2 class="text-lg sm:text-xl font-bold">Add Student</h2>
+        <button (click)="closeModal()" class="text-gray-600 hover:text-gray-900 text-lg">✖</button>
       </div>
-
+      <div class="divider"></div>
       <form [formGroup]="studentForm" (ngSubmit)="submit()">
-        <!-- Name Field with Validation Tooltip -->
+        <!-- Name Field -->
         <div
-        class="tooltip w-full"
-        [ngClass]="{
-          'tooltip-open tooltip-right tooltip-error': studentForm.controls['name'].invalid && (studentForm.controls['name'].dirty || studentForm.controls['name'].touched),
-          'tooltip-success': studentForm.controls['name'].valid
-        }"
-        [attr.data-tip]="studentForm.controls['name'].valid ? 'Valid Name' : 'Name is required'"
-        >
-        <input
-          type="text"
-          formControlName="name"
-          placeholder="Name"
-          class="input input-bordered w-full mb-2"
+          class="tooltip w-full"
           [ngClass]="{
-            'border-red-500': studentForm.controls['name'].invalid && (studentForm.controls['name'].dirty || studentForm.controls['name'].touched),
-            'border-green-500': studentForm.controls['name'].valid
+            'tooltip-open tooltip-right tooltip-error': studentForm.controls['name'].invalid && (studentForm.controls['name'].dirty || studentForm.controls['name'].touched),
+            'tooltip-success': studentForm.controls['name'].valid
           }"
-          required
-        />
+          [attr.data-tip]="studentForm.controls['name'].valid ? 'Valid Name' : 'Name is required'"
+        >
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="Name"
+            class="input input-bordered w-full mb-2 text-sm"
+            [ngClass]="{
+              'border-red-500': studentForm.controls['name'].invalid && (studentForm.controls['name'].dirty || studentForm.controls['name'].touched),
+              'border-green-500': studentForm.controls['name'].valid
+            }"
+            required
+          />
         </div>
 
-        <!-- Email Field with Validation Tooltip -->
+        <!-- Email Field -->
         <div
-        class="tooltip w-full"
-        [ngClass]="{
-          'tooltip-open tooltip-right tooltip-error': studentForm.controls['email'].invalid && (studentForm.controls['email'].dirty || studentForm.controls['email'].touched),
-          'tooltip-success': studentForm.controls['email'].valid
-        }"
-        [attr.data-tip]="studentForm.controls['email'].valid ? 'Valid Email' : studentForm.controls['email'].hasError('required') ? 'Email is required' : 'Invalid email format'"
-        >
-        <input
-          type="email"
-          formControlName="email"
-          placeholder="Email"
-          class="input input-bordered w-full mb-2"
+          class="tooltip w-full"
           [ngClass]="{
-            'border-red-500': studentForm.controls['email'].invalid && (studentForm.controls['email'].dirty || studentForm.controls['email'].touched),
-            'border-green-500': studentForm.controls['email'].valid
+            'tooltip-open tooltip-right tooltip-error': studentForm.controls['email'].invalid && (studentForm.controls['email'].dirty || studentForm.controls['email'].touched),
+            'tooltip-success': studentForm.controls['email'].valid
           }"
-          required
-        />
+          [attr.data-tip]="studentForm.controls['email'].valid ? 'Valid Email' : studentForm.controls['email'].hasError('required') ? 'Email is required' : 'Invalid email format'"
+        >
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="Email"
+            class="input input-bordered w-full mb-2 text-sm"
+            [ngClass]="{
+              'border-red-500': studentForm.controls['email'].invalid && (studentForm.controls['email'].dirty || studentForm.controls['email'].touched),
+              'border-green-500': studentForm.controls['email'].valid
+            }"
+            required
+          />
         </div>
 
-        <!-- Course Field with Validation Tooltip -->
+        <!-- Course Field -->
         <div
-        class="tooltip w-full"
-        [ngClass]="{
-          'tooltip-open tooltip-right tooltip-error': studentForm.controls['course'].invalid && (studentForm.controls['course'].dirty || studentForm.controls['course'].touched),
-          'tooltip-success': studentForm.controls['course'].valid
-        }"
-        [attr.data-tip]="studentForm.controls['course'].valid ? 'Valid Course' : 'Course is required'"
-        >
-        <input
-          type="text"
-          formControlName="course"
-          placeholder="Course"
-          class="input input-bordered w-full mb-4"
+          class="tooltip w-full"
           [ngClass]="{
-            'border-red-500': studentForm.controls['course'].invalid && (studentForm.controls['course'].dirty || studentForm.controls['course'].touched),
-            'border-green-500': studentForm.controls['course'].valid
+            'tooltip-open tooltip-right tooltip-error': studentForm.controls['course'].invalid && (studentForm.controls['course'].dirty || studentForm.controls['course'].touched),
+            'tooltip-success': studentForm.controls['course'].valid
           }"
-          required
-        />
+          [attr.data-tip]="studentForm.controls['course'].valid ? 'Valid Course' : 'Course is required'"
+        >
+          <input
+            type="text"
+            formControlName="course"
+            placeholder="Course"
+            class="input input-bordered w-full mb-4 text-sm"
+            [ngClass]="{
+              'border-red-500': studentForm.controls['course'].invalid && (studentForm.controls['course'].dirty || studentForm.controls['course'].touched),
+              'border-green-500': studentForm.controls['course'].valid
+            }"
+            required
+          />
         </div>
 
-        <div class="flex items-center justify-between">
-          <!-- Add Student Button -->
-          <button type="submit" class="btn btn-success flex justify-center items-center" [disabled]="isSubmitting">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <button type="submit" class="btn btn-success flex justify-center items-center w-full sm:w-auto" [disabled]="isSubmitting">
             <ng-container *ngIf="!isSubmitting; else loading">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5 mr-2">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-4 sm:size-5 mr-2">
                 <path d="M10 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM1.615 16.428a1.224 1.224 0 0 1-.569-1.175 6.002 6.002 0 0 1 11.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 0 1 7 18a9.953 9.953 0 0 1-5.385-1.572ZM16.25 5.75a.75.75 0 0 0-1.5 0v2h-2a.75.75 0 0 0 0 1.5h2v2a.75.75 0 0 0 1.5 0v-2h2a.75.75 0 0 0 0-1.5h-2v-2Z" />
               </svg>Add Student
             </ng-container>
             <ng-template #loading>
-              <span class="loading loading-spinner size-5"></span> Processing...
+              <span class="loading loading-spinner size-4 sm:size-5"></span> Processing...
             </ng-template>
           </button>
 
           <div class="tooltip tooltip-right" data-tip="Missing fields?">
-            <!-- Help Button -->
             <div class="dropdown">
-              <button tabindex="0" class="btn btn-outline">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <button type="button" tabindex="0" class="btn btn-outline btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 sm:size-5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
                 </svg>
               </button>
-              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm normal-case">
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow-sm normal-case text-sm">
                 <li><span class="font-normal">id is auto-incremented</span></li>
                 <li><span class="font-normal">id number is auto-generated</span></li>
                 <li><span class="font-normal">status is set to active by default.</span></li>
@@ -227,38 +252,39 @@
 
   <!-- Update Modal -->
   <dialog #updateModal class="modal">
-    <div class="modal-box">
+    <div class="modal-box w-full max-w-md p-4 sm:p-6">
       <h3 class="font-bold text-lg">Update Student</h3>
+      <div class="divider"></div>
       <form [formGroup]="updateForm" (ngSubmit)="updateStudent()">
-        <label class="label">Name</label>
-        <input type="text" class="input input-bordered w-full" formControlName="name" />
+        <label class="label text-sm">Name</label>
+        <input type="text" class="input input-bordered w-full text-sm" formControlName="name" />
 
-        <label class="label">Email</label>
-        <input type="email" class="input input-bordered w-full" formControlName="email" />
+        <label class="label text-sm">Email</label>
+        <input type="email" class="input input-bordered w-full text-sm" formControlName="email" />
 
-        <label class="label">Course</label>
-        <input type="text" class="input input-bordered w-full" formControlName="course" />
+        <label class="label text-sm">Course</label>
+        <input type="text" class="input input-bordered w-full text-sm" formControlName="course" />
 
-        <label class="label">Status</label>
-        <select class="select select-bordered w-full" formControlName="status">
+        <label class="label text-sm">Status</label>
+        <select class="select select-bordered w-full text-sm" formControlName="status">
           <option value="Active">Active</option>
           <option value="Inactive">Inactive</option>
         </select>
 
-        <div class="modal-action">
-          <button type="submit" class="btn btn-success">
-            <ng-container *ngIf="!isSubmitting; else loading" >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+        <div class="modal-action flex flex-col sm:flex-row gap-3">
+          <button type="submit" class="btn btn-success w-full sm:w-auto">
+            <ng-container *ngIf="!isSubmitting; else loading">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-4 sm:size-5">
                 <path d="M10.75 2.75a.75.75 0 0 0-1.5 0v8.614L6.295 8.235a.75.75 0 1 0-1.09 1.03l4.25 4.5a.75.75 0 0 0 1.09 0l4.25-4.5a.75.75 0 0 0-1.09-1.03l-2.955 3.129V2.75Z" />
                 <path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" />
               </svg>
-               Save Changes
+              Save Changes
             </ng-container>
             <ng-template #loading>
-              <span class="loading loading-spinner size-5"></span> Processing...
+              <span class="loading loading-spinner size-4 sm:size-5"></span> Processing...
             </ng-template>
           </button>
-          <button type="button" class="btn" (click)="closeUpdateModal()">Cancel</button>
+          <button type="button" class="btn w-full sm:w-auto" (click)="closeUpdateModal()">Cancel</button>
         </div>
       </form>
     </div>
